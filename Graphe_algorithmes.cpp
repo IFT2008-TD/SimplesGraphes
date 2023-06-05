@@ -7,19 +7,19 @@
 
 /**
  * Explore un graphe en profondeur à partir d'une sommet donné.
- * @param data struct infoDFS contenant le graphe à explorer, une pile qui recevra les noeuds abandonnées et un vecteur
+ * @param donneesDFS struct infoDFS contenant le graphe à explorer, une pile qui recevra les noeuds abandonnées et un vecteur
  * de bool indiquant quels noeuds ont été visités.  Voir Graphe_algorithme.h pour une description complète.
  * @param depart Le numéro du sommet de départ à explorer. ATTENTION: Si le numéro de sommet est non-valide, le comportement
  * sera non défini.  La validité du paramètre départ est la responsabilité de l'appeleur!!!
  */
-void auxExploreDFS(infoDFS& data, size_t depart) {
-    if (data.visites.at(depart)) return ;
-    data.visites.at(depart) = true ;
+void auxExploreDFS(infoDFS& donneesDFS, size_t depart) {
+    if (donneesDFS.visites.at(depart)) return ;
 
-    for (const auto& voisin: data.graphe.enumererVoisins(depart))
-        if (!data.visites.at(voisin.destination)) auxExploreDFS(data, voisin.destination) ;
+    donneesDFS.visites.at(depart) = true ;
+    for (const auto& voisin: donneesDFS.graphe.enumererVoisins(depart))
+        if (!donneesDFS.visites.at(voisin.destination)) auxExploreDFS(donneesDFS, voisin.destination) ;
 
-    data.abandonnes.push(depart) ;
+    donneesDFS.abandonnes.push(depart) ;
 
 }
 
@@ -30,10 +30,12 @@ void auxExploreDFS(infoDFS& data, size_t depart) {
  * premier à sortir de la pile.
  */
 std::stack<size_t> exploreGrapheDFS(const Graphe &graphe) {
-    infoDFS data(graphe) ;
+    infoDFS donneesDfs(graphe) ;
+
     for (size_t depart = 0; depart < graphe.taille(); ++depart)
-        auxExploreDFS(data, depart) ;
-    return data.abandonnes ;
+        auxExploreDFS(donneesDfs, depart) ;
+
+    return donneesDfs.abandonnes ;
 }
 
 /**
@@ -77,10 +79,12 @@ std::vector<size_t> exploreBFS(const Graphe &graphe, size_t depart) {
 template<typename T>
 std::set<T> transfererPileVersSet(std::stack<size_t> &pile) {
     std::set<T> valeurRetour ;
+
     while (!pile.empty()) {
         valeurRetour.insert(pile.top()) ;
         pile.pop() ;
     }
+
     return valeurRetour ;
 }
 
@@ -108,5 +112,6 @@ std::set<std::set<size_t>> kosaraju(const Graphe& graphe) {
             composantes.insert(transfererPileVersSet<size_t>(data.abandonnes)) ; // La pile est vidée et transférée
         }
     }
+
     return composantes ;
 }
