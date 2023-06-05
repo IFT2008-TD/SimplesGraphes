@@ -2,13 +2,11 @@ set(TEST_SOURCES test_graphe_interface.cpp ${PROJECT_SOURCE_DIR}/Graphe.cpp)
 
 add_executable(
         test_graphe_interface
-        GrapheTest.cpp
         ${TEST_SOURCES})
 
 add_executable(
         test_graphe_algorithmes
         test_graphe_algorithmes.cpp
-        GrapheTest.cpp
         ${PROJECT_SOURCE_DIR}/Graphe.cpp
         ${PROJECT_SOURCE_DIR}/Graphe_algorithmes.cpp
 )
