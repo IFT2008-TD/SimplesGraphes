@@ -51,9 +51,11 @@ std::vector<size_t> exploreBFS(const Graphe &graphe, size_t depart) {
     visites.at(depart) = true ;
 
     attente.push(depart) ;
+
     while (!attente.empty()) {
         auto courant = attente.front() ;
         attente.pop() ;
+
         for (auto voisin: graphe.enumererVoisins(courant)) {
             if (!visites.at(voisin.destination)) {
                 attente.push(voisin.destination) ;
@@ -66,7 +68,7 @@ std::vector<size_t> exploreBFS(const Graphe &graphe, size_t depart) {
 }
 
 /**
- * Transfère le contenu d'une pile dans un set.
+ * Transfère le contenu d'une pile dans un set, en vidant la pile.
  * @tparam T Type d'éléments de la pile
  * @param pile
  * @return Un set contenant tous les éléments de la pile.
@@ -100,9 +102,10 @@ std::set<std::set<size_t>> kosaraju(const Graphe& graphe) {
         size_t depart = pile.top() ;
         pile.pop() ;
 
+        // Explorer en profondeur tout noeud non visité
         if (!data.visites.at(depart)) {
-            auxExploreDFS(data, depart) ;
-            composantes.insert(transfererPileVersSet<size_t>(data.abandonnes)) ;
+            auxExploreDFS(data, depart) ; // La CFC résultante sera stockée dans la pile data.abandonnes
+            composantes.insert(transfererPileVersSet<size_t>(data.abandonnes)) ; // La pile est vidée et transférée
         }
     }
     return composantes ;
