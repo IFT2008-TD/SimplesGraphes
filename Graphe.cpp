@@ -21,6 +21,7 @@ void Graphe::ajouterSommet() {
 
 /**
  * Vérifie si le graphe comporte une arête entre le sommet départ, et le sommet arrivée.
+ * Remarquez, ligne 35 l'utilisation de std::any_of avec une lambda expression.
  * @param depart Numéro du sommet de départ, un entier positif ou nul.
  * @param arrivee Numéro du sommet d'arrivée, un entier positif ou nul.
  * @return true si une arête existe entre les deux sommets.

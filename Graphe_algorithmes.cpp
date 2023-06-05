@@ -45,18 +45,31 @@ std::vector<size_t> exploreBFS(const Graphe &graphe, size_t depart) {
     return predecesseurs ;
 }
 
+template <typename T>
+std::set<T> transfererPileVersSet(std::stack<size_t>& pile) {
+    std::set<T> valeurRetour ;
+    while (!pile.empty()) {
+        valeurRetour.insert(pile.top()) ;
+        pile.pop() ;
+    }
+    return valeurRetour ;
+}
+
 std::set<std::set<size_t>> kosaraju(const Graphe& graphe) {
     std::set<std::set<size_t>> composantes ;
 
     Graphe inv = graphe.grapheInverse() ;
     std::stack<size_t> pile = exploreGrapheDFS(inv) ;
     infoDFS data(graphe) ;
+
     while (!pile.empty()) {
         size_t depart = pile.top() ;
         pile.pop() ;
+
         if (!data.visites.at(depart)) {
             auxExploreDFS(data, depart) ;
-            composantes.insert(std::set<size_t>(data.visites.begin(), data.visites.end())) ;
+            composantes.insert(transfererPileVersSet<size_t>(data.abandonnes)) ;
         }
     }
+    return composantes ;
 }
