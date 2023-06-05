@@ -27,6 +27,11 @@ std::set<std::set<size_t>> kosaraju(const Graphe& graphe) ;
 
 std::vector<size_t> triTopologique(const Graphe& graphe) ;
 
+template <typename T>
+std::set<T> transfererPileVersSet(std::stack<size_t>& pile) ;
+
+
+
 
 
 #endif //SIMPLESGRAPHES_GRAPHE_ALGORITHMES_H
