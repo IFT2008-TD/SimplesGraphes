@@ -45,8 +45,11 @@ std::stack<size_t> exploreGrapheDFS(const Graphe &graphe) {
  * @return Un vecteur contenant les prédécesseur de chacun des sommets accessibles durant cette visite.  Par définition,
  * le noeud de départ n'a jamais de prédécesseur.  Les autres noeuds sans prédécesseurs ne sont pas accessibles à partir
  * du départ.  L'absence de prédécesseur est indiquée par la valeur graphe.taille() qui ne correspond à aucun sommet.
+ * @except std::invalid_argument si le numéro de départ n'est pas dans le graphe, ou si le graphe est vide
  */
 std::vector<size_t> exploreBFS(const Graphe &graphe, size_t depart) {
+    if (!graphe.sommetExiste(depart)) throw std::invalid_argument("exploreBFS: sommet invalide ou graphe vide") ;
+
     std::vector<size_t> predecesseurs(graphe.taille(), graphe.taille()) ;
     std::queue<size_t> attente ;
     std::vector<bool> visites(graphe.taille(), false) ;
