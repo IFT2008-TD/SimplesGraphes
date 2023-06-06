@@ -54,6 +54,8 @@ public:
 
     void                  ajouterSommet() ;
 
+    void                  retirerSommet(size_t sommet) ;
+
     void                  ajouterArc(size_t depart, size_t arrivee, double poids = 1.0) ;
 
 

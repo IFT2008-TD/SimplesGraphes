@@ -111,6 +111,22 @@ size_t Graphe::taille() const {
     return listes.size() ;
 }
 
+void Graphe::retirerSommet(size_t sommet) {
+    if (!sommetExiste(sommet)) throw std::invalid_argument("retirerSommet: sommet inexistant") ;
+
+    listes.erase(listes.begin() + static_cast<std::vector<size_t>::difference_type> (sommet)) ;
+
+    for (auto& liste: listes) {
+        auto it = std::find_if(liste.begin(), liste.end(), [sommet](Arc element) {return element.destination == sommet; }) ;
+        if (it != liste.end()) liste.erase(it) ;
+    }
+
+    for (auto& liste: listes) {
+        for (auto& voisin: liste) if (voisin.destination > sommet) --voisin.destination ;
+    }
+
+}
+
 
 
 

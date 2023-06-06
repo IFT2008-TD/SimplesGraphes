@@ -61,3 +61,33 @@ TEST_F(GrapheTest, inverse) {
     EXPECT_TRUE(inv.arcExiste(1, 0)) ;
     EXPECT_FALSE(inv.arcExiste(2, 0)) ;
 }
+
+TEST_F(GrapheTest, retirerSommet_g1) {
+    g1.retirerSommet(0) ;
+    EXPECT_EQ(0, g1.taille()) ;
+    EXPECT_FALSE(g1.sommetExiste(0)) ;
+}
+
+TEST_F(GrapheTest, retirerSommet_g2) {
+    g2.retirerSommet(1) ;
+    EXPECT_EQ(1, g2.taille()) ;
+    EXPECT_TRUE(g2.sommetExiste(0)) ;
+    EXPECT_FALSE(g2.sommetExiste(1)) ;
+}
+
+TEST_F(GrapheTest, retirerSommet_g3_sommet1) {
+    g3.retirerSommet(1) ;
+    EXPECT_EQ(2, g3.taille()) ;
+    EXPECT_TRUE(g3.sommetExiste(0)) ;
+    EXPECT_TRUE(g3.sommetExiste(1)) ;
+    EXPECT_FALSE(g3.arcExiste(0, 1)) ;
+    EXPECT_FALSE(g3.arcExiste(1, 0)) ;
+}
+
+TEST_F(GrapheTest, retirerSommet_g3_sommet0) {
+    g3.retirerSommet(0) ;
+    EXPECT_EQ(2, g3.taille()) ;
+    EXPECT_TRUE(g3.sommetExiste(0)) ;
+    EXPECT_TRUE(g3.sommetExiste(1)) ;
+    EXPECT_TRUE(g3.arcExiste(0, 1)) ;
+}
