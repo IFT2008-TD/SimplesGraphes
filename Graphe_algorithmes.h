@@ -46,6 +46,8 @@ using infoDFS =  struct infoDFS {
     explicit infoDFS(const Graphe& g) : graphe(g), abandonnes(), visites(g.taille(), false) {}
 } ;
 
+// Déclarations des fonctions accessibles
+
 std::stack<size_t> exploreGrapheDFS(const Graphe& graphe) ;
 
 std::vector<size_t> exploreBFS(const Graphe& graphe, size_t depart) ;

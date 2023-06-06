@@ -18,7 +18,8 @@
  * g1 graphe à un seul sommet
  * g2 graphe à deux sommets: 0 ---> 1
  * g3 graphe à trois sommets: 0 ---> 1 ---> 2
- * g6 graphe comportant 6 sommets.  Il y a un cycle 012, et un cycle 345 reliés par une arête 2->3.  Ce graphe a donc
+ * g6 graphe comportant 6 sommets.  Il y a un cycle 0->1->2->0, et un cycle 3->4->5->3 reliés par une arête 2->3.
+ * Ce graphe a donc
  * deux composantes fortement connexes: {0, 1, 2} et {3, 4, 5}.
  */
 
