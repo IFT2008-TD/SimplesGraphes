@@ -111,6 +111,12 @@ size_t Graphe::taille() const {
     return listes.size() ;
 }
 
+/**
+ * Retire un sommet du graphe.  Toutes les arêtes partant du sommet et allant vers ce sommet sont aussi donc supprimées
+ * et les noeuds sont renumérotés de manière à demeurer consécutifs.
+ * @param sommet Entier positif. Le numéro du sommet à éliminer.
+ * @except std::invalid_argument si le sommet n'est pas dans le graphe
+ */
 void Graphe::retirerSommet(size_t sommet) {
     if (!sommetExiste(sommet)) throw std::invalid_argument("retirerSommet: sommet inexistant") ;
 
