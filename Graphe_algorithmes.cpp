@@ -72,6 +72,31 @@ std::vector<size_t> exploreBFS(const Graphe &graphe, size_t depart) {
     return predecesseurs ;
 }
 
+std::stack<size_t> exploreDFS(Graphe graphe, size_t depart) {
+    std::stack<size_t> abandonnes ;
+    std::stack<size_t> encours ;
+    std::vector<bool> visites(graphe.taille(), false) ;
+
+    encours.push(depart) ;
+    visites.at(depart) = true ;
+
+    while (!encours.empty()) {
+        auto courant = encours.top() ;
+        encours.pop() ;
+        auto liste = graphe.enumererVoisins(courant) ;
+        auto it = std::find_if(liste.begin(), liste.end(), [&visites](Graphe::Arc e){return !visites[e.destination];}) ;
+        while ( it != liste.end()) {
+            encours.push(courant) ;
+            courant = it->destination ;
+            visites.at(courant) = true ;
+            liste = graphe.enumererVoisins(courant) ;
+            it = std::find_if(liste.begin(), liste.end(), [&visites](Graphe::Arc e){return !visites[e.destination];}) ;
+        }
+        abandonnes.push(courant) ;
+    }
+    return abandonnes ;
+}
+
 /**
  * Transfère le contenu d'une pile dans un set, en vidant la pile.
  * @tparam T Type d'éléments de la pile
@@ -100,8 +125,7 @@ std::set<std::set<size_t>> kosaraju(const Graphe& graphe) {
     std::set<std::set<size_t>> composantes ;
 
     // Générer le graphe inverse et l'explorer en profondeur, stocker les sommets dans l'objet pile.
-    Graphe inv = graphe.grapheInverse() ;
-    std::stack<size_t> pile = exploreGrapheDFS(inv) ;
+    std::stack<size_t> pile = exploreGrapheDFS(graphe.grapheInverse()) ;
 
     // Explorer le graphe direct en partant des sommets stockés dans l'objet pile.
     infoDFS data(graphe) ;

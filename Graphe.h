@@ -49,6 +49,8 @@ public:
 
     size_t                ariteEntree(size_t sommet)                   const ;
 
+    size_t                ariteSortie(size_t sommet)                   const ;
+
     Graphe                grapheInverse()                              const ;
 
 
@@ -57,6 +59,8 @@ public:
     void                  retirerSommet(size_t sommet) ;
 
     void                  ajouterArc(size_t depart, size_t arrivee, double poids = 1.0) ;
+
+    void                  retirerArc(size_t depart, size_t arrivee) ;
 
 
 private:

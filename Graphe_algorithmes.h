@@ -52,6 +52,8 @@ std::stack<size_t> exploreGrapheDFS(const Graphe& graphe) ;
 
 std::vector<size_t> exploreBFS(const Graphe& graphe, size_t depart) ;
 
+std::stack<size_t> exploreDFS(Graphe graphe, size_t depart) ;
+
 std::set<std::set<size_t>> kosaraju(const Graphe& graphe) ;
 
 std::vector<size_t> triTopologique(const Graphe& graphe) ;

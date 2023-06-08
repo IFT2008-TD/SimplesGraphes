@@ -114,6 +114,8 @@ size_t Graphe::taille() const {
 /**
  * Retire un sommet du graphe.  Toutes les arêtes partant du sommet et allant vers ce sommet sont aussi donc supprimées
  * et les noeuds sont renumérotés de manière à demeurer consécutifs.
+ * Exemple: J'ai le graphe 0-->1-->2 et je retire le sommet 1.  Le graphe résultant sera: 0-->1 car l'ancien sommet
+ * numéro 2 a été renuméroté à 1.
  * @param sommet Entier positif. Le numéro du sommet à éliminer.
  * @except std::invalid_argument si le sommet n'est pas dans le graphe
  */
@@ -131,6 +133,31 @@ void Graphe::retirerSommet(size_t sommet) {
         for (auto& voisin: liste) if (voisin.destination > sommet) --voisin.destination ;
     }
 
+}
+
+/**
+ * Retourne le nombre d'arêtes partant d'un sommet donné
+ * @param sommet Entier positif ou nul représentant le numéro du sommet
+ * @return Un entier positif ou nul représentant le nombre d'arcs partants de ce sommet
+ * @except std::invalid_argument si le numéro de sommet demandé n'est pas dans le graphe
+ */
+size_t Graphe::ariteSortie(size_t sommet) const {
+    if (!sommetExiste(sommet)) throw std::invalid_argument("ariteSortie: sommet inexistant") ;
+    return listes.at(sommet).size() ;
+}
+
+/**
+ * Retire une arête du graphe.
+ * NB: Si une arête va de 1 vers 2, retirerArc(2, 1) ne fonctionnera pas, il faut absolument respecter le sens
+ * de l'arête.
+ * @param depart Entier positif ou nul, sommet de départ de l'arête
+ * @param arrivee Entier positif ou nul, sommet d'arrivée de l'arête
+ */
+void Graphe::retirerArc(size_t depart, size_t arrivee) {
+    auto& liste = listes.at(depart) ;
+    auto it = std::find_if(liste.begin(), liste.end(), [&arrivee](Arc e) {return e.destination == arrivee ; }) ;
+    if (it != liste.end()) liste.erase(it) ;
+    else throw std::invalid_argument("retirerArc: arc inexistant") ;
 }
 
 

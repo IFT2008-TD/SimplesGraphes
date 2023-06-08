@@ -72,6 +72,27 @@ TEST_F(GrapheTest, exploreBFS_graphe6_depart_3) {
     EXPECT_EQ(attendu, exploreBFS(g6, 3)) ;
 }
 
+TEST_F(GrapheTest, exploreDFS_1) {
+    std::stack<size_t> attendu ;
+    attendu.push(0) ;
+    EXPECT_EQ(attendu, exploreDFS(g1, 0)) ;
+}
+
+TEST_F(GrapheTest, exploreDFS_2) {
+    std::stack<size_t> attendu ;
+    attendu.push(1) ;
+    attendu.push(0) ;
+    EXPECT_EQ(attendu, exploreDFS(g2, 0)) ;
+}
+
+TEST_F(GrapheTest, exploreDFS_3) {
+    std::stack<size_t> attendu ;
+    attendu.push(2) ;
+    attendu.push(1) ;
+    attendu.push(0) ;
+    EXPECT_EQ(attendu, exploreDFS(g3, 0)) ;
+}
+
 TEST_F(GrapheTest, kosaraju) {
     std::set<std::set<size_t>>
         attendu6 {{0, 1, 2}, {3, 4, 5}},
