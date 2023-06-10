@@ -56,7 +56,7 @@ std::stack<size_t> exploreDFS(Graphe graphe, size_t depart) ;
 
 std::set<std::set<size_t>> kosaraju(const Graphe& graphe) ;
 
-std::vector<size_t> triTopologique(const Graphe& graphe) ;
+std::vector<size_t> triTopologique(Graphe graphe) ;
 
 template <typename T>
 std::set<T> transfererPileVersSet(std::stack<size_t>& pile) ;

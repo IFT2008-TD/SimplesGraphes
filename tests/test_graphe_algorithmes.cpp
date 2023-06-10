@@ -107,3 +107,16 @@ TEST_F(GrapheTest, kosaraju) {
     EXPECT_EQ(attendu3, kosaraju(g3)) ;
     EXPECT_EQ(attendu6, kosaraju(g6)) ;
 }
+
+TEST_F(GrapheTest, triTopologique_0) {
+    EXPECT_EQ(std::vector<size_t>{}, triTopologique(g0)) ;
+}
+
+TEST_F(GrapheTest, triTopologique_1) {
+    EXPECT_EQ(std::vector<size_t>{0}, triTopologique(g1)) ;
+}
+
+TEST_F(GrapheTest, triTopologique_3) {
+    std::vector<size_t> attendu {0, 1, 2} ;
+    EXPECT_EQ(attendu, triTopologique(g3)) ;
+}

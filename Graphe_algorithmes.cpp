@@ -142,3 +142,21 @@ std::set<std::set<size_t>> kosaraju(const Graphe& graphe) {
 
     return composantes ;
 }
+
+std::vector<size_t> triTopologique(Graphe graphe) {
+
+    std::vector<size_t> retval(graphe.taille(), graphe.taille()) ;
+    size_t restants = graphe.taille() ;
+
+    while (restants > 0) {
+        size_t i = 0 ;
+
+        while (i < graphe.taille() && graphe.ariteSortie(i) != 0) ++i ;
+        if (i == graphe.taille())
+            throw std::invalid_argument("Tri topologique: tentative de trier un graphe cyclique") ;
+        retval.at(restants) = i ;
+        graphe.retirerSommet(i) ;
+        -- restants ;
+    }
+    return retval ;
+}
