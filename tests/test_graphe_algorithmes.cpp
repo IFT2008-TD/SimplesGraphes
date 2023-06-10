@@ -120,3 +120,7 @@ TEST_F(GrapheTest, triTopologique_3) {
     std::vector<size_t> attendu {0, 1, 2} ;
     EXPECT_EQ(attendu, triTopologique(g3)) ;
 }
+
+TEST_F(GrapheTest, triTopologique_6) {
+    EXPECT_THROW(triTopologique(g6), std::invalid_argument) ;
+}

@@ -72,6 +72,12 @@ std::vector<size_t> exploreBFS(const Graphe &graphe, size_t depart) {
     return predecesseurs ;
 }
 
+/**
+ * Explore un objet graphe en profondeur à partir d'un sommet de départ.
+ * @param graphe Objet graphe à visiter
+ * @param depart Entier positif ou nul désignant le sommet de départ
+ * @return La piles des sommets abandonnés.
+ */
 std::stack<size_t> exploreIteratifDFS(Graphe graphe, size_t depart) {
     std::stack<size_t> abandonnes ;
     std::stack<size_t> encours ;
@@ -143,6 +149,16 @@ std::set<std::set<size_t>> kosaraju(const Graphe& graphe) {
     return composantes ;
 }
 
+/**
+ * Effectue le tri topologique de l'objet graphe.  Cette implantation utilise l'algorithme vu dans le cours où l'on
+ * localise successivement les sommets puits et on les retire du graphe.  Attention, il y a ici une petite subtilité...
+ * Lorsqu'on retire un sommet du graphe, les autres sont automatiquement renumérotés de manière à préserver la numérotation
+ * successive des sommets.  Il faut donc une structure de données supplémentaire, un index afin de stocker dans le vecteur
+ * des résultats le numéro original du sommet!!!
+ * @param graphe Objet graphe à trier
+ * @return Un vecteur comprenant les numéros de sommet dans l'ordre topologique
+ * @except std::invalid_argument si le graphe est cyclique
+ */
 std::vector<size_t> triTopologique(Graphe graphe) {
 
     std::vector<size_t> retval(graphe.taille(), graphe.taille()) ;
