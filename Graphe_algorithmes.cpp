@@ -12,12 +12,12 @@
  * @param depart Le numéro du sommet de départ à explorer. ATTENTION: Si le numéro de sommet est non-valide, le comportement
  * sera non défini.  La validité du paramètre départ est la responsabilité de l'appeleur!!!
  */
-void auxExploreDFS(infoDFS& donneesDFS, size_t depart) {
+void auxExploreRecursifDFS(infoDFS& donneesDFS, size_t depart) {
     if (donneesDFS.visites.at(depart)) return ;
 
     donneesDFS.visites.at(depart) = true ;
     for (const auto& voisin: donneesDFS.graphe.enumererVoisins(depart))
-        if (!donneesDFS.visites.at(voisin.destination)) auxExploreDFS(donneesDFS, voisin.destination) ;
+        if (!donneesDFS.visites.at(voisin.destination)) auxExploreRecursifDFS(donneesDFS, voisin.destination) ;
 
     donneesDFS.abandonnes.push(depart) ;
 
@@ -29,11 +29,11 @@ void auxExploreDFS(infoDFS& donneesDFS, size_t depart) {
  * @return Un pile contenant les noeuds dans l'ordre où ils ont été abandonnés.  Donc le dernier noeud abandonné sera le
  * premier à sortir de la pile.
  */
-std::stack<size_t> exploreGrapheDFS(const Graphe &graphe) {
+std::stack<size_t> exploreRecursifGrapheDFS(const Graphe &graphe) {
     infoDFS donneesDfs(graphe) ;
 
     for (size_t depart = 0; depart < graphe.taille(); ++depart)
-        auxExploreDFS(donneesDfs, depart) ;
+        auxExploreRecursifDFS(donneesDfs, depart) ;
 
     return donneesDfs.abandonnes ;
 }
@@ -72,7 +72,7 @@ std::vector<size_t> exploreBFS(const Graphe &graphe, size_t depart) {
     return predecesseurs ;
 }
 
-std::stack<size_t> exploreDFS(Graphe graphe, size_t depart) {
+std::stack<size_t> exploreIteratifDFS(Graphe graphe, size_t depart) {
     std::stack<size_t> abandonnes ;
     std::stack<size_t> encours ;
     std::vector<bool> visites(graphe.taille(), false) ;
@@ -125,7 +125,7 @@ std::set<std::set<size_t>> kosaraju(const Graphe& graphe) {
     std::set<std::set<size_t>> composantes ;
 
     // Générer le graphe inverse et l'explorer en profondeur, stocker les sommets dans l'objet pile.
-    std::stack<size_t> pile = exploreGrapheDFS(graphe.grapheInverse()) ;
+    std::stack<size_t> pile = exploreRecursifGrapheDFS(graphe.grapheInverse()) ;
 
     // Explorer le graphe direct en partant des sommets stockés dans l'objet pile.
     infoDFS data(graphe) ;
@@ -135,7 +135,7 @@ std::set<std::set<size_t>> kosaraju(const Graphe& graphe) {
 
         // Explorer en profondeur tout noeud non visité
         if (!data.visites.at(depart)) {
-            auxExploreDFS(data, depart) ; // La CFC résultante sera stockée dans la pile data.abandonnes
+            auxExploreRecursifDFS(data, depart) ; // La CFC résultante sera stockée dans la pile data.abandonnes
             composantes.insert(transfererPileVersSet<size_t>(data.abandonnes)) ; // La pile est vidée et transférée
         }
     }
@@ -146,6 +146,8 @@ std::set<std::set<size_t>> kosaraju(const Graphe& graphe) {
 std::vector<size_t> triTopologique(Graphe graphe) {
 
     std::vector<size_t> retval(graphe.taille(), graphe.taille()) ;
+    std::vector<size_t> index(graphe.taille()) ;
+    std::iota(index.begin(), index.end(), 0) ;
     size_t restants = graphe.taille() ;
 
     while (restants > 0) {
@@ -154,9 +156,10 @@ std::vector<size_t> triTopologique(Graphe graphe) {
         while (i < graphe.taille() && graphe.ariteSortie(i) != 0) ++i ;
         if (i == graphe.taille())
             throw std::invalid_argument("Tri topologique: tentative de trier un graphe cyclique") ;
-        retval.at(restants) = i ;
+
         graphe.retirerSommet(i) ;
-        -- restants ;
+        retval.at( -- restants) = index.at(i) ;
+        index.erase(index.begin() + static_cast<std::vector<size_t>::difference_type> (i)) ;
     }
     return retval ;
 }

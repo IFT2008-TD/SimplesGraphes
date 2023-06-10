@@ -10,10 +10,11 @@
 #include <stack>
 #include <set>
 #include <queue>
+#include <numeric>
 
 /**
  * @struct infoDFS Type définissant une structure de données auxiliaire pour les visites en profondeur d'un objet graphe.
- * Elle permet d'alléger l'écriture de la fonction auxExploreDFS qui explore en profondeur un graphe à partir d'un sommet
+ * Elle permet d'alléger l'écriture de la fonction auxExploreRecursifDFS qui explore en profondeur un graphe à partir d'un sommet
  * donné.  Elle contient les champs suivants:
  *
  * graphe: l'objet graphe que l'on parcourt.
@@ -23,20 +24,20 @@
  *
  * visites: un vecteur de bool.  Si visite[x] est true, alors le sommet x a déjà été visité.
  *
- * Initialisation: lors du PREMIER appel à auxExploreDFS sur un objet graphe donné, le struct infoDFS doit être initialisé
+ * Initialisation: lors du PREMIER appel à auxExploreRecursifDFS sur un objet graphe donné, le struct infoDFS doit être initialisé
  * comme suit:
  *
  * graphe: doit recevoir évidemment une référence à l'objet graphe visité.
  * abandonnes: vide.  Aucun sommet n'a été visité ni abandonné.
  * visites: tous false puisqu'aucun sommet n'a été visité.
  *
- * Lors des appels subséquents à auxExploreDFS, le vecteur visites devrait en général être non touché: on ne veut jamais
+ * Lors des appels subséquents à auxExploreRecursifDFS, le vecteur visites devrait en général être non touché: on ne veut jamais
  * revisiter des sommets déjà visités.
  *
  * Par-contre, dépendemment de l'algorithme, la pile abandonnes peu ou non être modifiée: si on veut seulement explorer
- * le graphe au complet, comme dans exploreGrapheDFS, on ne touche pas à la pile puisqu'on veut accumuler tous les noeuds
+ * le graphe au complet, comme dans exploreRecursifGrapheDFS, on ne touche pas à la pile puisqu'on veut accumuler tous les noeuds
  * du graphe éventuellement.  Si on veut connaître les CFC, comme dans kosaraju, alors il faut vider la pile abandonnes
- * entre chaque appel, puisque après un appel à auxExploreDFS, la pile contient une CFC.
+ * entre chaque appel, puisque après un appel à auxExploreRecursifDFS, la pile contient une CFC.
  */
 using infoDFS =  struct infoDFS {
     Graphe graphe ;
@@ -48,11 +49,11 @@ using infoDFS =  struct infoDFS {
 
 // Déclarations des fonctions accessibles
 
-std::stack<size_t> exploreGrapheDFS(const Graphe& graphe) ;
+std::stack<size_t> exploreRecursifGrapheDFS(const Graphe& graphe) ;
 
 std::vector<size_t> exploreBFS(const Graphe& graphe, size_t depart) ;
 
-std::stack<size_t> exploreDFS(Graphe graphe, size_t depart) ;
+std::stack<size_t> exploreIteratifDFS(Graphe graphe, size_t depart) ;
 
 std::set<std::set<size_t>> kosaraju(const Graphe& graphe) ;
 

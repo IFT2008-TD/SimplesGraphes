@@ -9,20 +9,20 @@
 
 TEST_F(GrapheTest, exploreGrapheDFS_0) {
     std::stack<size_t> attendu ;
-    EXPECT_EQ(attendu, exploreGrapheDFS(g0)) ;
+    EXPECT_EQ(attendu, exploreRecursifGrapheDFS(g0)) ;
 }
 
 TEST_F(GrapheTest, exploreGrapheDFS_1){
     std::stack<size_t> attendu ;
     attendu.push(0) ;
-    EXPECT_EQ(attendu, exploreGrapheDFS(g1)) ;
+    EXPECT_EQ(attendu, exploreRecursifGrapheDFS(g1)) ;
 }
 
 TEST_F(GrapheTest, exploreGrapheDFS_2) {
     std::stack<size_t> attendu ;
     attendu.push(1) ;
     attendu.push(0) ;
-    EXPECT_EQ(attendu, exploreGrapheDFS(g2)) ;
+    EXPECT_EQ(attendu, exploreRecursifGrapheDFS(g2)) ;
 }
 
 TEST_F(GrapheTest, exploreGrapheDFS_3) {
@@ -30,7 +30,7 @@ TEST_F(GrapheTest, exploreGrapheDFS_3) {
     attendu.push(2) ;
     attendu.push(1) ;
     attendu.push(0) ;
-    EXPECT_EQ(attendu, exploreGrapheDFS(g3)) ;
+    EXPECT_EQ(attendu, exploreRecursifGrapheDFS(g3)) ;
 }
 
 TEST_F(GrapheTest, exploreBFS_g1_depart_0) {
@@ -75,14 +75,14 @@ TEST_F(GrapheTest, exploreBFS_graphe6_depart_3) {
 TEST_F(GrapheTest, exploreDFS_1) {
     std::stack<size_t> attendu ;
     attendu.push(0) ;
-    EXPECT_EQ(attendu, exploreDFS(g1, 0)) ;
+    EXPECT_EQ(attendu, exploreIteratifDFS(g1, 0)) ;
 }
 
 TEST_F(GrapheTest, exploreDFS_2) {
     std::stack<size_t> attendu ;
     attendu.push(1) ;
     attendu.push(0) ;
-    EXPECT_EQ(attendu, exploreDFS(g2, 0)) ;
+    EXPECT_EQ(attendu, exploreIteratifDFS(g2, 0)) ;
 }
 
 TEST_F(GrapheTest, exploreDFS_3) {
@@ -90,7 +90,7 @@ TEST_F(GrapheTest, exploreDFS_3) {
     attendu.push(2) ;
     attendu.push(1) ;
     attendu.push(0) ;
-    EXPECT_EQ(attendu, exploreDFS(g3, 0)) ;
+    EXPECT_EQ(attendu, exploreIteratifDFS(g3, 0)) ;
 }
 
 TEST_F(GrapheTest, kosaraju) {
