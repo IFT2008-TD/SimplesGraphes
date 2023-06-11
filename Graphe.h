@@ -31,6 +31,7 @@ public:
 
         Arc(size_t dest, double poids) : destination(dest), poids(poids) {}
         bool operator == (Arc rhs) const {return destination == rhs.destination && poids == rhs.poids; }
+        bool operator <  (Arc rhs) const {return poids < rhs.poids ; } ;
     };
 
     using Arc = struct Arc ;

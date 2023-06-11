@@ -11,6 +11,7 @@
 #include <set>
 #include <queue>
 #include <numeric>
+#include <limits>
 
 /**
  * @struct infoDFS Type définissant une structure de données auxiliaire pour les visites en profondeur d'un objet graphe.
@@ -46,6 +47,13 @@ using infoDFS =  struct infoDFS {
 
     explicit infoDFS(const Graphe& g) : graphe(g), abandonnes(), visites(g.taille(), false) {}
 } ;
+
+using resultatsDijkstra = struct resultatsDijkstra {
+    std::vector<size_t> predecesseurs ;
+    std::vector<double> distances ;
+
+    explicit resultatsDijkstra(size_t n) : predecesseurs(n, n), distances(n, std::numeric_limits<double>::infinity()) {} ;
+};
 
 // Déclarations des fonctions accessibles
 

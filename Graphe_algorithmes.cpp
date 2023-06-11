@@ -159,7 +159,7 @@ std::set<std::set<size_t>> kosaraju(const Graphe& graphe) {
  */
 std::vector<size_t> triTopologique(Graphe graphe) {
 
-    std::vector<size_t> retval(graphe.taille(), graphe.taille()) ;
+    std::vector<size_t> tri(graphe.taille(), graphe.taille()) ;
     std::vector<size_t> index(graphe.taille()) ;
     std::iota(index.begin(), index.end(), 0) ;
     size_t restants = graphe.taille() ;
@@ -172,8 +172,29 @@ std::vector<size_t> triTopologique(Graphe graphe) {
             throw std::invalid_argument("Tri topologique: tentative de trier un graphe cyclique") ;
 
         graphe.retirerSommet(i) ;
-        retval.at( -- restants) = index.at(i) ;
+        tri.at(-- restants) = index.at(i) ;
         index.erase(index.begin() + static_cast<std::vector<size_t>::difference_type> (i)) ;
     }
-    return retval ;
+    return tri ;
+}
+
+resultatsDijkstra dijkstra(const Graphe& graphe, size_t depart) {
+    resultatsDijkstra resultats(graphe.taille()) ;
+    resultats.predecesseurs.at(depart) = 0 ;
+    std::set<size_t> nonResolus ;
+    for (size_t i = 0; i < graphe.taille(); ++i) nonResolus.insert(i) ;
+
+    while (!nonResolus.empty()) {
+        auto itMinElement = std::min_element(nonResolus.begin(), nonResolus.end()) ;
+        auto courant = *itMinElement ;
+        nonResolus.erase(courant) ;
+        for (auto voisin: graphe.enumererVoisins(depart)) {
+            double temp = resultats.distances.at(courant) + voisin.poids ;
+            if (temp < resultats.distances.at(voisin.destination))  {
+                resultats.distances.at(voisin.destination) = temp ;
+                resultats.predecesseurs.at(voisin.destination) = courant ;
+            }
+        }
+    }
+    return resultats ;
 }
