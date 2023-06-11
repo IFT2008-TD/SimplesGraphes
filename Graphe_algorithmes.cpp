@@ -9,7 +9,8 @@
  * Explore un graphe en profondeur à partir d'une sommet donné.
  * @param donneesDFS struct infoDFS contenant le graphe à explorer, une pile qui recevra les noeuds abandonnées et un vecteur
  * de bool indiquant quels noeuds ont été visités.  Voir Graphe_algorithme.h pour une description complète.
- * @param depart Le numéro du sommet de départ à explorer. ATTENTION: Si le numéro de sommet est non-valide, le comportement
+ * @param depart Le numéro du sommet de départ à explorer.
+ * @pre ATTENTION: Si le numéro de sommet est non-valide, le comportement
  * sera non défini.  La validité du paramètre départ est la responsabilité de l'appeleur!!!
  */
 void auxExploreRecursifDFS(infoDFS& donneesDFS, size_t depart) {
@@ -78,7 +79,7 @@ std::vector<size_t> exploreBFS(const Graphe &graphe, size_t depart) {
  * @param depart Entier positif ou nul désignant le sommet de départ
  * @return La piles des sommets abandonnés.
  */
-std::stack<size_t> exploreIteratifDFS(Graphe graphe, size_t depart) {
+std::stack<size_t> exploreIteratifDFS(const Graphe& graphe, size_t depart) {
     std::stack<size_t> abandonnes ;
     std::stack<size_t> encours ;
     std::vector<bool> visites(graphe.taille(), false) ;
@@ -130,16 +131,13 @@ std::set<T> transfererPileVersSet(std::stack<size_t> &pile) {
 std::set<std::set<size_t>> kosaraju(const Graphe& graphe) {
     std::set<std::set<size_t>> composantes ;
 
-    // Générer le graphe inverse et l'explorer en profondeur, stocker les sommets dans l'objet pile.
     std::stack<size_t> pile = exploreRecursifGrapheDFS(graphe.grapheInverse()) ;
 
-    // Explorer le graphe direct en partant des sommets stockés dans l'objet pile.
     infoDFS data(graphe) ;
     while (!pile.empty()) {
         size_t depart = pile.top() ;
         pile.pop() ;
 
-        // Explorer en profondeur tout noeud non visité
         if (!data.visites.at(depart)) {
             auxExploreRecursifDFS(data, depart) ; // La CFC résultante sera stockée dans la pile data.abandonnes
             composantes.insert(transfererPileVersSet<size_t>(data.abandonnes)) ; // La pile est vidée et transférée

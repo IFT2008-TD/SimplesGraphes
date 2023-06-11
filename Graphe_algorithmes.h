@@ -53,7 +53,7 @@ std::stack<size_t> exploreRecursifGrapheDFS(const Graphe& graphe) ;
 
 std::vector<size_t> exploreBFS(const Graphe& graphe, size_t depart) ;
 
-std::stack<size_t> exploreIteratifDFS(Graphe graphe, size_t depart) ;
+std::stack<size_t> exploreIteratifDFS(const Graphe& graphe, size_t depart) ;
 
 std::set<std::set<size_t>> kosaraju(const Graphe& graphe) ;
 
