@@ -52,7 +52,9 @@ using resultatsDijkstra = struct resultatsDijkstra {
     std::vector<size_t> predecesseurs ;
     std::vector<double> distances ;
 
-    explicit resultatsDijkstra(size_t n) : predecesseurs(n, n), distances(n, std::numeric_limits<double>::infinity()) {} ;
+    explicit resultatsDijkstra(size_t n, size_t d) : predecesseurs(n, n), distances(n, std::numeric_limits<double>::infinity()) {
+        distances.at(d) = 0 ;
+    } ;
 };
 
 // Déclarations des fonctions accessibles

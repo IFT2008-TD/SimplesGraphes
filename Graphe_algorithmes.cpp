@@ -179,8 +179,8 @@ std::vector<size_t> triTopologique(Graphe graphe) {
 }
 
 resultatsDijkstra dijkstra(const Graphe& graphe, size_t depart) {
-    resultatsDijkstra resultats(graphe.taille()) ;
-    resultats.predecesseurs.at(depart) = 0 ;
+    resultatsDijkstra resultats(graphe.taille(), depart) ;
+
     std::set<size_t> nonResolus ;
     for (size_t i = 0; i < graphe.taille(); ++i) nonResolus.insert(i) ;
 
