@@ -124,3 +124,11 @@ TEST_F(GrapheTest, triTopologique_3) {
 TEST_F(GrapheTest, triTopologique_6) {
     EXPECT_THROW(triTopologique(g6), std::invalid_argument) ;
 }
+
+TEST_F(GrapheTest, dijkstra_6_depart_0) {
+    std::vector<size_t> pred {6, 0, 1, 2, 3, 4} ;
+    std::vector<double> dist {0, 1, 2, 3, 4, 5} ;
+    auto resultat = dijkstra(g6, 0) ;
+    EXPECT_EQ(pred, resultat.predecesseurs) ;
+    EXPECT_EQ(dist, resultat.distances) ;
+}
