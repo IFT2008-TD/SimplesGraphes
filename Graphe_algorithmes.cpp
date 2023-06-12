@@ -178,6 +178,19 @@ std::vector<size_t> triTopologique(Graphe graphe) {
     return tri ;
 }
 
+size_t localiserSommetMinimal(std::set<size_t> nonResolus, std::vector<double> distances) {
+    auto temp = std::numeric_limits<double>::infinity() ;
+    size_t indexMin = 0 ;
+
+    for (auto cle: nonResolus)
+        if (distances.at(cle) < temp) indexMin = cle ;
+    return indexMin ;
+}
+
+void relaxer() {
+
+}
+
 resultatsDijkstra dijkstra(const Graphe& graphe, size_t depart) {
     resultatsDijkstra resultats(graphe.taille(), depart) ;
 
@@ -185,8 +198,7 @@ resultatsDijkstra dijkstra(const Graphe& graphe, size_t depart) {
     for (size_t i = 0; i < graphe.taille(); ++i) nonResolus.insert(i) ;
 
     while (!nonResolus.empty()) {
-        auto itMinElement = std::min_element(nonResolus.begin(), nonResolus.end()) ;
-        auto courant = *itMinElement ;
+        auto courant = localiserSommetMinimal(nonResolus, resultats.distances) ;
         nonResolus.erase(courant) ;
         for (auto voisin: graphe.enumererVoisins(depart)) {
             double temp = resultats.distances.at(courant) + voisin.poids ;

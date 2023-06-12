@@ -69,6 +69,8 @@ std::set<std::set<size_t>> kosaraju(const Graphe& graphe) ;
 
 std::vector<size_t> triTopologique(Graphe graphe) ;
 
+resultatsDijkstra dijkstra(const Graphe& graphe, size_t depart) ;
+
 template <typename T>
 std::set<T> transfererPileVersSet(std::stack<size_t>& pile) ;
 
