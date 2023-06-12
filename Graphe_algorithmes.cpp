@@ -4,25 +4,116 @@
 
 #include "Graphe_algorithmes.h"
 
+namespace {
 
 /**
- * Explore un graphe en profondeur à partir d'une sommet donné.
- * @param donneesDFS struct infoDFS contenant le graphe à explorer, une pile qui recevra les noeuds abandonnées et un vecteur
- * de bool indiquant quels noeuds ont été visités.  Voir Graphe_algorithme.h pour une description complète.
- * @param depart Le numéro du sommet de départ à explorer.
- * @pre ATTENTION: Si le numéro de sommet est non-valide, le comportement
- * sera non défini.  La validité du paramètre départ est la responsabilité de l'appeleur!!!
+ * @struct InfoDFS Type définissant une structure de données auxiliaire pour les visites en profondeur d'un objet graphe.
+ * Elle permet d'alléger l'écriture de la fonction auxExploreRecursifDFS qui explore en profondeur un graphe à partir d'un sommet
+ * donné.  Elle contient les champs suivants:
+ *
+ * graphe: l'objet graphe que l'on parcourt.
+ *
+ * abandonnes: une pile contenant les sommets ayant été visités, en ordre d'abandon.  C'est donc le résultat principal d'une
+ * exploration en profondeur.
+ *
+ * visites: un vecteur de bool.  Si visite[x] est true, alors le sommet x a déjà été visité.
+ *
+ * Initialisation: lors du PREMIER appel à auxExploreRecursifDFS sur un objet graphe donné, le struct InfoDFS doit être initialisé
+ * comme suit:
+ *
+ * graphe: doit recevoir évidemment une référence à l'objet graphe visité.
+ * abandonnes: vide.  Aucun sommet n'a été visité ni abandonné.
+ * visites: tous false puisqu'aucun sommet n'a été visité.
+ *
+ * Lors des appels subséquents à auxExploreRecursifDFS, le vecteur visites devrait en général être non touché: on ne veut jamais
+ * revisiter des sommets déjà visités.
+ *
+ * Par-contre, dépendemment de l'algorithme, la pile abandonnes peu ou non être modifiée: si on veut seulement explorer
+ * le graphe au complet, comme dans exploreRecursifGrapheDFS, on ne touche pas à la pile puisqu'on veut accumuler tous les noeuds
+ * du graphe éventuellement.  Si on veut connaître les CFC, comme dans kosaraju, alors il faut vider la pile abandonnes
+ * entre chaque appel, puisque après un appel à auxExploreRecursifDFS, la pile contient une CFC.
  */
-void auxExploreRecursifDFS(infoDFS& donneesDFS, size_t depart) {
-    if (donneesDFS.visites.at(depart)) return ;
 
-    donneesDFS.visites.at(depart) = true ;
-    for (const auto& voisin: donneesDFS.graphe.enumererVoisins(depart))
-        if (!donneesDFS.visites.at(voisin.destination)) auxExploreRecursifDFS(donneesDFS, voisin.destination) ;
+    using InfoDFS =  struct infoDFS {
+        Graphe graphe ;
+        std::stack<size_t> abandonnes ;
+        std::vector<bool> visites ;
 
-    donneesDFS.abandonnes.push(depart) ;
+        explicit infoDFS(const Graphe& g) : graphe(g), abandonnes(), visites(g.taille(), false) {}
+    } ;
+
+    /**
+     * Fonction auxiliaire utilisée dans Dijkstra.  Elle balaye les noeuds non-résolus à la recherche de celui qui a une
+     * distance minimale.  Ce noeud est retiré des non-résolus: il sera le prochain noeud résolu.
+     * @param nonResolus std::set comprenant la liste des sommets non-résolus.
+     * @param distances Vecteur comprenant les distances mises à jour.
+     * @return Le numéro du prochain sommet résolu.
+     */
+    size_t localiserSommetMinimal(std::set<size_t> nonResolus, std::vector<double> distances) {
+        auto temp = std::numeric_limits<double>::infinity() ;
+        size_t indexMin = *nonResolus.begin();
+
+        for (auto cle: nonResolus)
+            if (distances.at(cle) < temp) indexMin = cle ;
+        return indexMin ;
+    }
+
+    /**
+     * Relaxe le noeud voisin à partir du noeud courant.
+     * @param voisin struct Arc un noeud adjacent au noeud courant
+     * @param courant le numéro du sommet courant
+     * @param res struct ResultatDijkstra comprenant les distances et les prédécesseurs. Mis à jour lors de la relaxation.
+     */
+    void relaxer(const Graphe::Arc& voisin, size_t courant, ResultatsDijkstra& res) {
+        double temp = res.distances.at(courant) + voisin.poids ;
+        if (temp < res.distances.at(voisin.destination)) {
+            res.distances.at(voisin.destination) = temp ;
+            res.predecesseurs.at(voisin.destination) = courant ;
+        }
+    }
+
+    /**
+     * Transfère le contenu d'une pile dans un set, en vidant la pile.
+     * @tparam T Type d'éléments de la pile
+     * @param pile
+     * @return Un set contenant tous les éléments de la pile.
+     * @post La pile est VIDE à la fin
+     */
+    template<typename T>
+    std::set<T> transfererPileVersSet(std::stack<size_t> &pile) {
+        std::set<T> valeurRetour ;
+
+        while (!pile.empty()) {
+            valeurRetour.insert(pile.top()) ;
+            pile.pop() ;
+        }
+
+        return valeurRetour ;
+    }
+
+    /**
+     * Explore un graphe en profondeur à partir d'une sommet donné.
+     * @param donneesDFS struct InfoDFS contenant le graphe à explorer, une pile qui recevra les noeuds abandonnées et un vecteur
+     * de bool indiquant quels noeuds ont été visités.  Voir Graphe_algorithme.h pour une description complète.
+     * @param depart Le numéro du sommet de départ à explorer.
+     * @pre ATTENTION: Si le numéro de sommet est non-valide, le comportement
+     * sera non défini.  La validité du paramètre départ est la responsabilité de l'appeleur!!!
+     */
+    void auxExploreRecursifDFS(InfoDFS& donneesDFS, size_t depart) {
+        if (donneesDFS.visites.at(depart)) return ;
+
+        donneesDFS.visites.at(depart) = true ;
+        for (const auto& voisin: donneesDFS.graphe.enumererVoisins(depart))
+            if (!donneesDFS.visites.at(voisin.destination)) auxExploreRecursifDFS(donneesDFS, voisin.destination) ;
+
+        donneesDFS.abandonnes.push(depart) ;
+
+    }
+
 
 }
+
+
 
 /**
  * Effectue une visite en profondeur d'un objet graphe.
@@ -31,7 +122,7 @@ void auxExploreRecursifDFS(infoDFS& donneesDFS, size_t depart) {
  * premier à sortir de la pile.
  */
 std::stack<size_t> exploreRecursifGrapheDFS(const Graphe &graphe) {
-    infoDFS donneesDfs(graphe) ;
+    InfoDFS donneesDfs(graphe) ;
 
     for (size_t depart = 0; depart < graphe.taille(); ++depart)
         auxExploreRecursifDFS(donneesDfs, depart) ;
@@ -104,24 +195,7 @@ std::stack<size_t> exploreIteratifDFS(const Graphe& graphe, size_t depart) {
     return abandonnes ;
 }
 
-/**
- * Transfère le contenu d'une pile dans un set, en vidant la pile.
- * @tparam T Type d'éléments de la pile
- * @param pile
- * @return Un set contenant tous les éléments de la pile.
- * @post La pile est VIDE à la fin
- */
-template<typename T>
-std::set<T> transfererPileVersSet(std::stack<size_t> &pile) {
-    std::set<T> valeurRetour ;
 
-    while (!pile.empty()) {
-        valeurRetour.insert(pile.top()) ;
-        pile.pop() ;
-    }
-
-    return valeurRetour ;
-}
 
 /**
  * Énumère les composantes fortement connexes d'un graphe.
@@ -133,7 +207,7 @@ std::set<std::set<size_t>> kosaraju(const Graphe& graphe) {
 
     std::stack<size_t> pile = exploreRecursifGrapheDFS(graphe.grapheInverse()) ;
 
-    infoDFS data(graphe) ;
+    InfoDFS data(graphe) ;
     while (!pile.empty()) {
         size_t depart = pile.top() ;
         pile.pop() ;
@@ -178,25 +252,11 @@ std::vector<size_t> triTopologique(Graphe graphe) {
     return tri ;
 }
 
-size_t localiserSommetMinimal(std::set<size_t> nonResolus, std::vector<double> distances) {
-    auto temp = std::numeric_limits<double>::infinity() ;
-    size_t indexMin = *nonResolus.begin();
 
-    for (auto cle: nonResolus)
-        if (distances.at(cle) < temp) indexMin = cle ;
-    return indexMin ;
-}
 
-void relaxer(const Graphe::Arc& voisin, size_t courant, resultatsDijkstra& res) {
-    double temp = res.distances.at(courant) + voisin.poids ;
-    if (temp < res.distances.at(voisin.destination)) {
-        res.distances.at(voisin.destination) = temp ;
-        res.predecesseurs.at(voisin.destination) = courant ;
-    }
-}
 
-resultatsDijkstra dijkstra(const Graphe& graphe, size_t depart) {
-    resultatsDijkstra resultats(graphe.taille(), depart) ;
+ResultatsDijkstra dijkstra(const Graphe& graphe, size_t depart) {
+    ResultatsDijkstra resultats(graphe.taille(), depart) ;
 
     std::set<size_t> nonResolus ;
     for (size_t i = 0; i < graphe.taille(); ++i) nonResolus.insert(i) ;
