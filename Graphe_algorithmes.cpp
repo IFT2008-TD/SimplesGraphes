@@ -178,23 +178,56 @@ std::vector<size_t> triTopologique(Graphe graphe) {
     return tri ;
 }
 
-resultatsDijkstra dijkstra(const Graphe& graphe, size_t depart) {
-    resultatsDijkstra resultats(graphe.taille(), depart) ;
 
-    std::set<size_t> nonResolus ;
-    for (size_t i = 0; i < graphe.taille(); ++i) nonResolus.insert(i) ;
 
-    while (!nonResolus.empty()) {
-        auto itMinElement = std::min_element(nonResolus.begin(), nonResolus.end()) ;
-        auto courant = *itMinElement ;
-        nonResolus.erase(courant) ;
-        for (auto voisin: graphe.enumererVoisins(depart)) {
-            double temp = resultats.distances.at(courant) + voisin.poids ;
-            if (temp < resultats.distances.at(voisin.destination))  {
-                resultats.distances.at(voisin.destination) = temp ;
-                resultats.predecesseurs.at(voisin.destination) = courant ;
-            }
+struct Trajet {
+    size_t predecesseur ;
+    double distance ;
+
+    Trajet(size_t p, double d) : predecesseur(p), distance(d) {}
+    bool operator < (const Trajet rhs) const {return distance < rhs.distance ; }
+};
+
+class FileEnAttente {
+public:
+    explicit FileEnAttente(size_t n, size_t dep) : sommets() {
+        for (size_t i = 0; i < n; ++i) {
+            if (i != dep) sommets.emplace_back(i, std::numeric_limits<double>::infinity()) ;
+            else sommets.emplace_back(Trajet(n, 0)) ;
         }
     }
+
+    size_t extraireMinimum() {
+        auto itMinElement = std::min_element(sommets.begin(), sommets.end()) ;
+        auto courant = static_cast<size_t> (itMinElement - sommets.begin()) ;
+        sommets.erase(itMinElement) ;
+    }
+
+    bool estVide() const { return sommets.empty() ; }
+
+private:
+    std::vector<Trajet> sommets ;
+};
+
+void relaxer(Trajet courant, Graphe::Arc voisin) {
+    double temp = courant.distance + voisin.poids ;
+    if (temp < res.distances.at(voisin.destination)) {
+        res.distances.at(voisin.destination) = temp ;
+        res.predecesseurs.at(voisin.destination) = courant ;
+    }
+}
+
+template <typename T>
+resultatsDijkstra dijkstra(const Graphe& graphe, size_t depart) {
+    resultatsDijkstra resultats(graphe.taille(), depart) ;
+    T nonResolus(graphe.taille(), depart) ;
+
+    while (!nonResolus.estVide()) {
+        auto courant = nonResolus.extraireMinimum() ;
+        for (auto voisin: graphe.enumererVoisins(depart)) relaxer(courant, voisin, FileEnAttente) ;
+    }
+
+
+
     return resultats ;
 }
