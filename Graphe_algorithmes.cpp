@@ -187,8 +187,12 @@ size_t localiserSommetMinimal(std::set<size_t> nonResolus, std::vector<double> d
     return indexMin ;
 }
 
-void relaxer() {
-
+void relaxer(const Graphe::Arc& voisin, size_t courant, resultatsDijkstra& res) {
+    double temp = res.distances.at(courant) + voisin.poids ;
+    if (temp < res.distances.at(voisin.destination)) {
+        res.distances.at(voisin.destination) = temp ;
+        res.predecesseurs.at(voisin.destination) = courant ;
+    }
 }
 
 resultatsDijkstra dijkstra(const Graphe& graphe, size_t depart) {
@@ -200,13 +204,7 @@ resultatsDijkstra dijkstra(const Graphe& graphe, size_t depart) {
     while (!nonResolus.empty()) {
         auto courant = localiserSommetMinimal(nonResolus, resultats.distances) ;
         nonResolus.erase(courant) ;
-        for (auto voisin: graphe.enumererVoisins(courant)) {
-            double temp = resultats.distances.at(courant) + voisin.poids ;
-            if (temp < resultats.distances.at(voisin.destination))  {
-                resultats.distances.at(voisin.destination) = temp ;
-                resultats.predecesseurs.at(voisin.destination) = courant ;
-            }
-        }
+        for (auto voisin: graphe.enumererVoisins(courant)) relaxer(voisin, courant, resultats) ;
     }
     return resultats ;
 }
