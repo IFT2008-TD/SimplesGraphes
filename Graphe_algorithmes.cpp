@@ -4,6 +4,11 @@
 
 #include "Graphe_algorithmes.h"
 
+/**
+ * @namespace anonyme: comprend un type et des fonctions privées à ce fichier.  Ce sont des fonctions auxiliaires servant
+ * à faciliter l'écriture des algorithmes standards des graphes.
+ */
+
 namespace {
 
 /**
@@ -252,9 +257,15 @@ std::vector<size_t> triTopologique(Graphe graphe) {
     return tri ;
 }
 
-
-
-
+/**
+ * Utilise l'algorithme de Dijkstra pour trouver les trajets les plus courts partant d'un sommet départ vers tous les
+ * autres sommets, dans un graphe orienté et pondéré.
+ * @param graphe Objet graphe à analyser, utilisant des listes d'adjacences.
+ * @param depart Numéro du sommet de départ.
+ * @return Un struct contenant un vecteur de prédécesseurs, permettant de reconstituer les chemins, et un vecteur des
+ * distances.
+ * @pre Le sommet départ doit se trouver dans le graphe, sinon le comportement est non défini.
+ */
 ResultatsDijkstra dijkstra(const Graphe& graphe, size_t depart) {
     ResultatsDijkstra resultats(graphe.taille(), depart) ;
 
