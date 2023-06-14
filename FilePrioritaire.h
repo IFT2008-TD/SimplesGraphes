@@ -35,6 +35,7 @@ public:
     void extraireMinimum() ;
     size_t taille() const ;
     bool estVide() const ;
+    const T& lireClePourIndex(size_t i) const ;
     void reduireCle(size_t numeroIndex, const T& nouvelleCle) ;
     std::vector<T> genererIndex() const ;
 

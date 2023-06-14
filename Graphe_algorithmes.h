@@ -6,6 +6,7 @@
 #define SIMPLESGRAPHES_GRAPHE_ALGORITHMES_H
 
 #include "Graphe.h"
+#include "FilePrioritaire.h"
 
 #include <stack>
 #include <set>
@@ -36,6 +37,8 @@ std::set<std::set<size_t>> kosaraju(const Graphe& graphe) ;
 std::vector<size_t> triTopologique(Graphe graphe) ;
 
 ResultatsDijkstra dijkstra(const Graphe& graphe, size_t depart) ;
+
+ResultatsDijkstra dijkstraFilePrioritaire(const Graphe& graphe, size_t depart) ;
 
 
 

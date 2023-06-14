@@ -28,11 +28,11 @@ void FilePrioritaire<T>::percolerVersLeBas(size_t i) {
     size_t d = enfantDroite(i) ;
     size_t minimum = i ;
 
-    if ((g < heapSize) && (heap.at(g) < heap.at(i))) minimum = g ;
+    if ((g < heapSize) && (heap.at(g) < heap.at(minimum))) minimum = g ;
 
     if ((d < heapSize) && (heap.at(d) < heap.at(minimum))) minimum = d ;
 
-    if (minimum != i) {
+    if (i != minimum) {
         std::swap(heap.at(i), heap.at(minimum)) ;
         index.at(heap.at(i).numero).position = i ;
         index.at(heap.at(minimum).numero).position = minimum ;
@@ -88,6 +88,11 @@ std::vector<T> FilePrioritaire<T>::genererIndex() const {
     std::vector<T> resultat ;
     for (size_t i = 0; i < index.size(); ++i) resultat.push_back(index.at(i).data) ;
     return resultat ;
+}
+
+template<typename T>
+const T &FilePrioritaire<T>::lireClePourIndex(size_t i) const {
+    return index.at(i).data ;
 }
 
 #endif //FILEPRIORITAIRE_FILEPRIORITAIREIMPLANTATION_H

@@ -279,3 +279,24 @@ ResultatsDijkstra dijkstra(const Graphe& graphe, size_t depart) {
     }
     return resultats ;
 }
+
+void relaxerFilePrioritaire(Graphe::Arc voisin, size_t courant, ResultatsDijkstra& resultat, FilePrioritaire<double>& nonResolus) {
+    double temp = nonResolus.lireClePourIndex(courant) + voisin.poids ;
+    if (temp < nonResolus.lireClePourIndex(voisin.destination)) {
+        nonResolus.reduireCle(voisin.destination, temp) ;
+        resultat.predecesseurs.at(voisin.destination) = courant ;
+    }
+}
+
+ResultatsDijkstra dijkstraFilePrioritaire(const Graphe& graphe, size_t depart) {
+    ResultatsDijkstra resultats(graphe.taille(), depart) ;
+
+    FilePrioritaire<double> nonResolus(resultats.distances) ;
+    while (!nonResolus.estVide()) {
+        auto courant = nonResolus.lireIndexMinimum() ;
+        nonResolus.extraireMinimum() ;
+        for (auto voisin: graphe.enumererVoisins(courant)) relaxerFilePrioritaire(voisin, courant, resultats, nonResolus) ;
+    }
+    resultats.distances = nonResolus.genererIndex() ;
+    return resultats ;
+}
