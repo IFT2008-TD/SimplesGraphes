@@ -78,6 +78,21 @@ namespace {
     }
 
     /**
+     * Relaxe le noeud voisin à partir du noeud courant, utilisant une file prioritaire pour les distances
+     * @param voisin struct Arc, noeud voisin
+     * @param courant Numéro du noeud courant
+     * @param resultat Dans cette structure, les prédécesseurs seront mis à jour
+     * @param nonResolus dans cette structure les distances seront mises à jour
+     */
+    void relaxerFilePrioritaire(Graphe::Arc voisin, size_t courant, ResultatsDijkstra& resultat, FilePrioritaire<double>& nonResolus) {
+        double temp = nonResolus.lireClePourIndex(courant) + voisin.poids ;
+        if (temp < nonResolus.lireClePourIndex(voisin.destination)) {
+            nonResolus.reduireCle(voisin.destination, temp) ;
+            resultat.predecesseurs.at(voisin.destination) = courant ;
+        }
+    }
+
+    /**
      * Transfère le contenu d'une pile dans un set, en vidant la pile.
      * @tparam T Type d'éléments de la pile
      * @param pile
@@ -280,14 +295,14 @@ ResultatsDijkstra dijkstra(const Graphe& graphe, size_t depart) {
     return resultats ;
 }
 
-void relaxerFilePrioritaire(Graphe::Arc voisin, size_t courant, ResultatsDijkstra& resultat, FilePrioritaire<double>& nonResolus) {
-    double temp = nonResolus.lireClePourIndex(courant) + voisin.poids ;
-    if (temp < nonResolus.lireClePourIndex(voisin.destination)) {
-        nonResolus.reduireCle(voisin.destination, temp) ;
-        resultat.predecesseurs.at(voisin.destination) = courant ;
-    }
-}
 
+/**
+ * Même algorithme que la fonction précédente, mais version plus efficace utilisant une file prioritaire.
+ * @param graphe Objet graphe à analyser
+ * @param depart Numéro du sommet de départ
+ * @return Un struct contenant un vecteur de prédécesseurs et un vecteur de distances
+ * @pre Le sommet de départ doit se trouver dans le graphe, sinon le comportement est non-défini
+ */
 ResultatsDijkstra dijkstraFilePrioritaire(const Graphe& graphe, size_t depart) {
     ResultatsDijkstra resultats(graphe.taille(), depart) ;
 

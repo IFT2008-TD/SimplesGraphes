@@ -7,6 +7,15 @@
 
 #include <vector>
 
+/**
+ * @class FilePrioritaire Gère une file prioritaire dont chaque élément est un numéro d'index, de type entier, associé
+ * à une clé de type T.  Ceci est pour permettre l'utilisation dans l'algorithme de Dijkstra avec un graphe dont les
+ * sommets sont répertoriés par des entiers consécutifs, qui seront nos numéros d'index, alors que les clés seront les
+ * distances des arêtes.
+ *
+ * @tparam T Doit définir l'opérateur <
+ */
+
 template <typename T>
 class FilePrioritaire {
 private:
