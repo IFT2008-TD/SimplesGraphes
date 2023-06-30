@@ -59,7 +59,10 @@ namespace {
         size_t indexMin = *nonResolus.begin();
 
         for (auto cle: nonResolus)
-            if (distances.at(cle) < temp) indexMin = cle ;
+            if (distances.at(cle) < temp){
+                indexMin = cle ;
+                temp = distances.at(cle) ;
+            }
         return indexMin ;
     }
 
