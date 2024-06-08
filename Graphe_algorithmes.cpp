@@ -246,10 +246,7 @@ std::set<std::set<size_t>> kosaraju(const Graphe& graphe) {
 
 /**
  * Effectue le tri topologique de l'objet graphe.  Cette implantation utilise l'algorithme vu dans le cours où l'on
- * localise successivement les sommets puits et on les retire du graphe.  Attention, il y a ici une petite subtilité...
- * Lorsqu'on retire un sommet du graphe, les autres sont automatiquement renumérotés de manière à préserver la numérotation
- * successive des sommets.  Il faut donc une structure de données supplémentaire, un index afin de stocker dans le vecteur
- * des résultats le numéro original du sommet!!!
+ * localise successivement les sommets puits et on les retire du graphe.  Version simplifiée et remaniée.
  * @param graphe Objet graphe à trier
  * @return Un vecteur comprenant les numéros de sommet dans l'ordre topologique
  * @except std::invalid_argument si le graphe est cyclique
