@@ -254,24 +254,24 @@ std::set<std::set<size_t>> kosaraju(const Graphe& graphe) {
  * @return Un vecteur comprenant les numéros de sommet dans l'ordre topologique
  * @except std::invalid_argument si le graphe est cyclique
  */
-std::vector<size_t> triTopologique(Graphe graphe) {
-
-    std::vector<size_t> tri(graphe.taille(), graphe.taille()) ;
-    std::vector<size_t> index(graphe.taille()) ;
-    std::iota(index.begin(), index.end(), 0) ;
-    size_t restants = graphe.taille() ;
-
-    while (restants > 0) {
-        size_t i = 0 ;
-
-        while (i < graphe.taille() && graphe.ariteSortie(i) != 0) ++i ;
-        if (i == graphe.taille())
-            throw std::invalid_argument("Tri topologique: tentative de trier un graphe cyclique") ;
-
-        graphe.retirerSommet(i) ;
-        tri.at(-- restants) = index.at(i) ;
-        index.erase(index.begin() + static_cast<std::vector<size_t>::difference_type> (i)) ;
+std::vector<size_t> triTopologique(const Graphe& graphe) {
+    std::vector<size_t> arites(graphe.taille()) ;
+    std::queue<size_t> en_attente ;
+    std::vector<size_t> tri ;
+    for (size_t i = 0; i < graphe.taille(); ++i){
+        arites.at(i) = graphe.ariteEntree(i) ;
+        if (arites.at(i) == 0) en_attente.push(i) ;
     }
+    while (!en_attente.empty()) {
+        auto courant = en_attente.front() ;
+        en_attente.pop() ;
+        for (auto voisin: graphe.enumererVoisins(courant)) {
+            -- arites.at(voisin.destination) ;
+            if (arites.at(voisin.destination) == 0) en_attente.push(voisin.destination) ;
+        }
+        tri.push_back(courant) ;
+    }
+    if (tri.size() != graphe.taille()) throw std::invalid_argument("tri_topologique: graphe cyclique") ;
     return tri ;
 }
 

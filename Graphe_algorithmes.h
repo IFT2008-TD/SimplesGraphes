@@ -34,7 +34,7 @@ std::stack<size_t> exploreIteratifDFS(const Graphe& graphe, size_t depart) ;
 
 std::set<std::set<size_t>> kosaraju(const Graphe& graphe) ;
 
-std::vector<size_t> triTopologique(Graphe graphe) ;
+std::vector<size_t> triTopologique(const Graphe& graphe) ;
 
 ResultatsDijkstra dijkstra(const Graphe& graphe, size_t depart) ;
 
